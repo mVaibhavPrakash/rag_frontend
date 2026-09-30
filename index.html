@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" data-cim-style-root>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title></title>
+		<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+		<link rel="icon" href="%BASE_URL%images/stitchX.png" />
+
+		<div id="svg-sprite-container"></div>
+	</head>
+	<body>
+		<!-- Adding empty value here to resolve issue where Chrome shows a page translation popup caused by the delay between JavaScript loading and page rendering in the SPA -->
+		<div id="app" class="whole-page">&nbsp;</div>
+		<script type="module" src="/App.tsx"></script>
+	</body>
+</html>
