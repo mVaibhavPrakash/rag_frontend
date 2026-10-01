@@ -24,7 +24,7 @@ cd rag
 
 **Terminal 1 - Document Processor API** (separate project):
 
-Follow the setup instructions in the [Document Processor repository](link-to-processor-repo) to start the API on port 8000.
+Follow the setup instructions in the [Document Processor repository](https://gitlab.com/Cimpress-Technology/Embroidery/rag-api) to start the API on port 8000.
 
 ```bash
 # Once processor is running, verify:
