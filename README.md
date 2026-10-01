@@ -271,14 +271,12 @@ The application processes and indexes the following document types:
 ### Running the Web App with Hot Reload
 
 ```bash
-cd apps/web
-npm run dev
+npm run start
 ```
 
 ### Building for Production
 
 ```bash
-cd apps/web
 npm run build
 npm run start
 ```
