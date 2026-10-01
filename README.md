@@ -20,17 +20,6 @@ Get the application running immediately:
 git clone <repository-url>
 cd rag
 
-# Setup environment file
-cp apps/web/.env apps/web/.env.local
-
-# Edit .env.local and add your keys
-# PINECONE_API_KEY=your-pinecone-api-key
-# LUNA_API_KEY=your-luna-api-key
-# LUNA_BASE_URL=https://api.openai.com/v1
-# LUNA_MODEL=gpt-4
-# PYTHON_PROCESSOR_URL=http://127.0.0.1:8000
-```
-
 ### 3. Run All Services (Use 2 terminals)
 
 **Terminal 1 - Document Processor API** (separate project):
@@ -45,14 +34,13 @@ curl http://127.0.0.1:8000/health
 **Terminal 2 - Web App:**
 
 ```bash
-cd apps/web
-npm install
-npm run dev
+npm install --legacy-peer-deps
+npm run start
 ```
 
 ### 4. Access Application
 
-Open **<http://localhost:3000>** and start uploading documents!
+Open **<http://localhost:8765>** and start uploading documents!
 
 ---
 
@@ -69,41 +57,6 @@ Open **<http://localhost:3000>** and start uploading documents!
 - **Disk Space**: At least 10GB
 - **RAM**: Minimum 4GB (8GB recommended)
 - **Internet**: Required for API calls to LLM and Pinecone services
-
-## Configure
-
-### Environment Setup
-
-`apps/web/.env` contains the shared local defaults. Create `apps/web/.env.local` for secrets and machine-specific overrides:
-
-```env
-PINECONE_API_KEY=your-pinecone-api-key
-LUNA_API_KEY=your-luna-api-key
-# Override these for your Luna-compatible endpoint and model ID:
-LUNA_BASE_URL=https://api.openai.com/v1
-LUNA_MODEL=gpt-5.6-luna
-```
-
-### Configuration Details
-
-The chat composer uses OpenAI API or a Luna-compatible endpoint for generation. Embeddings are created via the configured LLM service. The provided configuration uses `PYTHON_PROCESSOR_URL=http://127.0.0.1:8000`. The Pinecone index must use `cosine` similarity and appropriate dimensions based on your embedding model (typically 1536 for OpenAI embeddings).
-
-**Optional Environment Variables:**
-
-```env
-# LLM Configuration
-LUNA_API_KEY=your-api-key
-LUNA_BASE_URL=https://api.openai.com/v1
-LUNA_MODEL=gpt-4
-
-# Document Processing
-PYTHON_PROCESSOR_URL=http://127.0.0.1:8000
-MAX_FILE_SIZE=52428800  # 50MB in bytes
-
-# Logging
-LOG_LEVEL=info
-DEBUG=false
-```
 
 ## Run Locally
 
@@ -122,18 +75,17 @@ curl http://127.0.0.1:8000/health
 In a terminal:
 
 ```bash
-cd apps/web
 npm install
-npm run dev
+npm run start
 ```
 
-The application will be available at `http://localhost:3000`
+The application will be available at `http://localhost:8765`
 
 ### Step 3: Verify All Services
 
 Open your browser and check:
 
-1. **Web App**: <http://localhost:3000> (should load the chat interface)
+1. **Web App**: <http://localhost:8765> (should load the chat interface)
 2. **Processor API**: <http://127.0.0.1:8000/docs> (should show FastAPI docs)
 
 ## Usage
@@ -170,25 +122,9 @@ Access interactive API documentation using Swagger UI or ReDoc:
 
 - **Document Processor API - Swagger UI**: <http://127.0.0.1:8000/docs>
 - **Document Processor API - ReDoc**: <http://127.0.0.1:8000/redoc>
-- **Web Application API**: <http://localhost:3000/api/docs>
+- **Web Application API**: <http://localhost:8765/api/docs>
 
 The APIs include automatic OpenAPI documentation with the ability to test endpoints interactively. Use the Swagger UI to explore all available endpoints and their parameters.
-
-## Validate
-
-### Build Web Application
-
-```bash
-cd apps/web
-npm run build
-```
-
-### Type Check
-
-```bash
-cd apps/web
-npm run type-check
-```
 
 ## Troubleshooting
 
