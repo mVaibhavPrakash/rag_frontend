@@ -1,12 +1,24 @@
 version: "3.9"
 
 services:
-  web:
+  backend:
     build:
-      context: ./apps/web
+      context: ../rag-api
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "8000:8000"
+    env_file:
+      - ../rag-api/.env
+    environment:
+      CORS_ORIGINS: "http://localhost:8765"
 
-  processor:
+  frontend:
     build:
-      context: ./apps/processor
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8765:80"
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: "http://backend:8000"

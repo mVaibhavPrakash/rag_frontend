@@ -1,16 +1,17 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Bot, CircleStopIcon, CornerDownLeftIcon, Database, Link2, RotateCcw, X } from "lucide-react";
-import { Button, IconButton, TextField, ToggleButton, ToggleButtonGroup, Tooltip } from "@cimpress-ui/react";
+import { Fragment, useEffect, useRef } from "react";
+import { Bot, CircleStopIcon, CornerDownLeftIcon, Database, RotateCcw } from "lucide-react";
+import { Button, IconButton, Tooltip, ToggleButton, ToggleButtonGroup } from "@cimpress-ui/react";
 import { CATEGORIES } from "./constants";
 import { useRagWorkspace } from "../context/root";
+import { useState } from "react";
 
 const MAX_QUESTION_HEIGHT = 300;
 const AGENT_STEPS = [
     { phase: "searching", label: "Searching indexed documents" },
     { phase: "reviewing", label: "Reviewing relevant sections" },
-    { phase: "writing", label: "Drafting a grounded answer" },
+    { phase: "writing",   label: "Drafting a grounded answer" },
 ] as const;
 
 function getPhaseLabel(phase: "searching" | "reviewing" | "writing" | undefined) {
@@ -21,13 +22,8 @@ export default function ChatPanel() {
     const {
         selectedCategories,
         toggleCategory,
-        url,
-        setUrl,
-        onAddUrl,
         question,
         setQuestion,
-        chatModel,
-        setChatModel,
         messages,
         isResponding,
         responsePhase,
@@ -37,15 +33,11 @@ export default function ChatPanel() {
         retryLastQuestion,
     } = useRagWorkspace();
 
-    const [openTool, setOpenTool] = useState<"knowledge" | "urls" | null>(null);
+    const [knowledgeOpen, setKnowledgeOpen] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const messageEndRef = useRef<HTMLDivElement | null>(null);
     const activeStepIndex = AGENT_STEPS.findIndex((step) => step.phase === responsePhase);
     const activeStepLabel = AGENT_STEPS[activeStepIndex]?.label ?? "Working on your answer";
-
-    const toggleTool = (tool: "knowledge" | "urls") => {
-        setOpenTool((prev) => (prev === tool ? null : tool));
-    };
 
     const resizeTextarea = (textarea: HTMLTextAreaElement) => {
         textarea.style.height = "auto";
@@ -55,9 +47,7 @@ export default function ChatPanel() {
     };
 
     useEffect(() => {
-        if (textareaRef.current) {
-            resizeTextarea(textareaRef.current);
-        }
+        if (textareaRef.current) resizeTextarea(textareaRef.current);
     }, [question]);
 
     useEffect(() => {
@@ -111,36 +101,21 @@ export default function ChatPanel() {
                 <div className="composer-toolbar">
                     <label className="model-picker">
                         <Bot size={13} aria-hidden="true" />
-                        <span className="sr-only">Generation model</span>
-                        <select
-                            aria-label="Generation model"
-                            value={chatModel}
-                            onChange={(event) => setChatModel(event.target.value as "ollama" | "gpt-5.6-luna")}
-                            disabled={isResponding}
-                        >
-                            <option value="ollama">Ollama</option>
-                            <option value="gpt-5.6-luna">GPT 5.6 Luna</option>
-                        </select>
+                        <span>GPT-4o mini</span>
                     </label>
                     <Button
                         variant={selectedCategories.length > 0 ? "primary" : "secondary"}
                         size="small"
                         iconStart={<Database size={13} />}
-                        onPress={() => toggleTool("knowledge")}
+                        onPress={() => setKnowledgeOpen((v) => !v)}
                     >
-                        {selectedCategories.length > 0 ? `Knowledge base (${selectedCategories.length})` : "Knowledge base"}
-                    </Button>
-                    <Button
-                        variant={url !== "" ? "primary" : "secondary"}
-                        size="small"
-                        iconStart={<Link2 size={13} />}
-                        onPress={() => toggleTool("urls")}
-                    >
-                        Url
+                        {selectedCategories.length > 0
+                            ? `Knowledge base (${selectedCategories.length})`
+                            : "Knowledge base"}
                     </Button>
                 </div>
 
-                {openTool === "knowledge" && (
+                {knowledgeOpen && (
                     <div className="tool-popover">
                         <ToggleButtonGroup
                             aria-label="Knowledge base categories"
@@ -149,52 +124,24 @@ export default function ChatPanel() {
                             onSelectionChange={(keys) => {
                                 const next = new Set(keys as Set<string | number>);
                                 CATEGORIES.forEach((category) => {
-                                    const hasCategory = selectedCategories.includes(category);
-                                    const shouldHaveCategory = next.has(category);
-                                    if (hasCategory !== shouldHaveCategory) {
-                                        toggleCategory(category);
-                                    }
+                                    const has = selectedCategories.includes(category);
+                                    const should = next.has(category);
+                                    if (has !== should) toggleCategory(category);
                                 });
                             }}
                             wrap
                         >
                             {CATEGORIES.map((category) => (
-                                <ToggleButton
-                                    key={category}
-                                    value={category}
-                                >
+                                <ToggleButton key={category} value={category}>
                                     {category}
                                 </ToggleButton>
                             ))}
                         </ToggleButtonGroup>
                         <p className="composer-hint">
                             {selectedCategories.length === 0
-                                ? "Nothing selected - RAG will decide automatically."
-                                : "RAG will still double-check other categories if needed."}
+                                ? "Nothing selected — RAG will decide automatically."
+                                : "RAG will still check other categories if needed."}
                         </p>
-                    </div>
-                )}
-
-                {openTool === "urls" && (
-                    <div className="tool-popover">
-                        <div className="url-input-row">
-                            <Link2 size={14} />
-                            <TextField
-                                aria-label="Add URL"
-                                value={url}
-                                onChange={setUrl}
-                                onKeyDown={(event) => {
-                                    if (event.key === "Enter") {
-                                        event.preventDefault();
-                                        onAddUrl();
-                                    }
-                                }}
-                                placeholder="https://example.com/doc"
-                            />
-                            <Button variant="secondary" size="small" onPress={onAddUrl}>
-                                Add
-                            </Button>
-                        </div>
                     </div>
                 )}
 
@@ -202,17 +149,20 @@ export default function ChatPanel() {
                     <textarea
                         ref={textareaRef}
                         value={question}
-                        onChange={(event) => setQuestion(event.target.value)}
-                        onKeyDown={(event) => {
-                            if (event.key === "Enter" && !event.shiftKey) {
-                                event.preventDefault();
+                        onChange={(e) => setQuestion(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
                                 onSend();
                             }
                         }}
                         placeholder="Ask a question about your documents..."
                         rows={2}
                     />
-                    <Tooltip label={isResponding ? "Stop generating" : "Send question"} isDisabled={!isResponding && !question.trim()}>
+                    <Tooltip
+                        label={isResponding ? "Stop generating" : "Send question"}
+                        isDisabled={!isResponding && !question.trim()}
+                    >
                         <IconButton
                             variant={isResponding ? "secondary" : "primary"}
                             UNSAFE_className="send-btn"

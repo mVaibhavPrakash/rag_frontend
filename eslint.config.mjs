@@ -1,22 +1,16 @@
 import { defineConfig } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import reactPlugin from "eslint-plugin-react";
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  {
-    rules: {
-      semi: ['error', 'always'],
+    {
+        plugins: { react: reactPlugin },
+        rules: {
+            semi: ["error", "always"],
+            "react/jsx-uses-react": "error",
+            "react/jsx-uses-vars": "error",
+        },
+        ignores: ["dist/**", "node_modules/**"],
     },
-    ignores: [
-      // Default ignores of eslint-config-next:
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
-    ],
-  },
 ]);
 
 export default eslintConfig;

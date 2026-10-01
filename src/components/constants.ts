@@ -24,7 +24,6 @@ export function guessCategory(fileName: string): DocCategory {
 
 export const AllowedFileTypes = {
     PDF: "application/pdf",
-    JSON: "application/json",
     Markdown: "text/markdown",
     Text: "text/plain",
     Word: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

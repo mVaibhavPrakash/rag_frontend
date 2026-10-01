@@ -1,9 +1,6 @@
 export type DocCategory = "General" | "Policy" | "Product" | "Engineering" | "Support";
 export type ResponsePhase = "searching" | "reviewing" | "writing";
 
-export const CHAT_MODELS = ["ollama", "gpt-5.6-luna"] as const;
-export type ChatModel = (typeof CHAT_MODELS)[number];
-
 export interface MetadataEntry {
     id: string;
     key: string;
@@ -31,5 +28,5 @@ export interface ChatMessage {
     role: "user" | "assistant";
     content: string;
     status?: "completed" | "canceled" | "error";
-    canceledAtPhase?: "searching" | "reviewing" | "writing";
+    canceledAtPhase?: ResponsePhase;
 }
