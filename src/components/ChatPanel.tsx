@@ -139,7 +139,7 @@ export default function ChatPanel() {
                         </ToggleButtonGroup>
                         <p className="composer-hint">
                             {selectedCategories.length === 0
-                                ? "Nothing selected — RAG will decide automatically."
+                                ? "Nothing selected - RAG will decide automatically."
                                 : "RAG will still check other categories if needed."}
                         </p>
                     </div>

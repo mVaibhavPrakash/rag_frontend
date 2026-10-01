@@ -22,7 +22,7 @@ export default defineConfig({
             "/api": {
                 target: BACKEND_URL,
                 changeOrigin: true,
-                // No rewrite — the backend registers routes as /api/documents and /api/chat
+                // No rewrite - the backend registers routes as /api/documents and /api/chat
             },
         },
     },

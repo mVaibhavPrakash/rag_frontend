@@ -2,14 +2,14 @@ import { test, expect } from "@playwright/test";
 import path from "path";
 
 /**
- * E2E tests — Document upload flow
+ * E2E tests - Document upload flow
  *
  * These tests verify that a user can:
  *   1. See the initial empty state.
  *   2. Stage a file for upload (pending list appears).
  *   3. Adjust the knowledge-base category.
  *   4. Add custom metadata.
- *   5. Save — the file is POSTed to /api/documents and the doc appears in the list.
+ *   5. Save - the file is POSTed to /api/documents and the doc appears in the list.
  *   6. Remove a saved document from the list.
  *
  * The tests mock /api/documents so they run without a live backend.

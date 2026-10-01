@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import path from "path";
 
 /**
- * E2E tests — Chat / RAG flow
+ * E2E tests - Chat / RAG flow
  *
  * These tests verify that a user can:
  *   1. See the welcome message on first load.
