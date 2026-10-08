@@ -35,7 +35,7 @@ const documentSlice = createSlice({
         updateMetadata: (state: DocumentState[], action: PayloadAction<{id: string; metadataId: string; field: Partial<Pick<DocMetadata, "key" | "value">>}>) => {
             const {id, metadataId, field} = action.payload;
             const stateSlice = state.find(s => s.id === id);
-            if(stateSlice){
+            if(stateSlice) {
                 stateSlice.metadata?.forEach(m => {
                     if(m.id === metadataId){
                         m = {...m, ...field}

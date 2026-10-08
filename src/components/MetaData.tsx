@@ -22,13 +22,7 @@ export const MetaData = ({ doc, isDisabled }: MetaDataProps): JSX.Element => {
     }
 
     const onChange = (id: string, field: Partial<Pick<DocMetadata, "key" | "value">>) => {
-        console.log(field)
-        setState(prev => prev.map(p => {
-            if(p.id === id) {
-                return {...p, ...field}
-            }
-            return p;
-        }))
+        setState(prev => prev.map(p => (p.id === id ? {...p, ...field} : p)));
     }
 
     return (
