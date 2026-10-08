@@ -1,13 +1,14 @@
-import { DocumentContextProvider } from "../context/documentContext";
+import { Provider } from "react-redux";
 import { RagWorkspaceProvider } from "../context/ragWorkspaceContext";
 import RagWorkspace from "./RagWorkspace";
+import { appStore } from "@/state/store";
 
 export default function Home() {
   return (
     <RagWorkspaceProvider>
-      <DocumentContextProvider>
-        <RagWorkspace />
-      </DocumentContextProvider>
+        <Provider store={appStore}>
+          <RagWorkspace />
+        </Provider>
     </RagWorkspaceProvider>
   );
 }
