@@ -1,12 +1,13 @@
-import { removeDocument, updateDocCategory } from "@/state/slices/documentSlice";
-import { IconButton, Select, SelectItem, Tooltip } from "@cimpress-ui/react";
-import { FileText, X } from "lucide-react";
+import {updateDocCategory } from "@/state/slices/documentSlice";
+import { Select, SelectItem } from "@cimpress-ui/react";
+import { FileText } from "lucide-react";
 import { JSX } from "react";
 import { CATEGORIES } from "./constants";
 import { MetaData } from "./MetaData";
 import { DocCategory, Status, DocumentState } from './types';
 import { RootDispatch } from "@/state/store";
 import { useDispatch } from "react-redux";
+import { RemoveBtn } from "./RemoveBtn";
 
 interface UnSavedDocsProps {
     docs: DocumentState[];
@@ -24,17 +25,7 @@ export const UnSavedDocsPanel = ({ docs }: UnSavedDocsProps): JSX.Element => {
                         <div className="pending-item-head">
                             <FileText size={14} />
                             <strong className="pending-file-name">{file.name}</strong>
-                            <Tooltip label={`Remove ${file.name}`}>
-                                <IconButton
-                                    variant="tertiary"
-                                    tone="critical"
-                                    size="small"
-                                    aria-label={`Remove ${file.name}`}
-                                    icon={<X size={13} />}
-                                    isDisabled={isDisabled}
-                                    onPress={() => dispatch(removeDocument({ id: file.id }))}
-                                />
-                            </Tooltip>
+                            <RemoveBtn doc={file}/>
                         </div>
 
                         <div className="pending-select">

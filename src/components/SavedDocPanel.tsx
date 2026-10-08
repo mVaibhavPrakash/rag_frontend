@@ -2,9 +2,8 @@ import { RootDispatch } from "@/state/store";
 import { JSX } from "react";
 import { useDispatch } from "react-redux";
 import { DocumentState } from "./types";
-import { removeDocument } from "@/state/slices/documentSlice";
-import { IconButton, Tooltip } from "@cimpress-ui/react";
 import { FileText, X } from "lucide-react";
+import { RemoveBtn } from "./RemoveBtn";
 
 interface SavedDocPanelProps {
     docs: DocumentState[];
@@ -31,14 +30,7 @@ export const SavedDocPanel = ({ docs }: SavedDocPanelProps): JSX.Element => {
                             ))}
                         </span>
                     </span>
-                    <Tooltip label={`Remove ${doc.name}`}>
-                        <IconButton variant="tertiary"
-                            tone="critical"
-                            size="small"
-                            aria-label={`Remove ${doc.name}`}
-                            icon={<X size={13} />}
-                            onPress={() => dispatch(removeDocument({ id: doc.id }))} />
-                    </Tooltip>
+                    <RemoveBtn doc={doc}/>
                 </li>
             ))
             }

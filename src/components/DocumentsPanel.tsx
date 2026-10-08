@@ -1,28 +1,10 @@
-import { FileText, Paperclip, Plus, X } from "lucide-react";
-import {
-    Button,
-    IconButton,
-    Select,
-    SelectItem,
-    TextField,
-    Tooltip
-} from "@cimpress-ui/react";
-import { AllowedFileTypes, CATEGORIES } from "./constants";
-import { DocCategory, DocumentState, Status } from "./types";
+import { Paperclip } from "lucide-react";
+import { Button } from "@cimpress-ui/react";
+import { AllowedFileTypes } from "./constants";
+import { DocumentState } from "./types";
 import { useDispatch, useSelector } from "react-redux";
-import { appStore, RootDispatch, RootState } from "../state/store";
-import {
-    addDocument,
-    addMetadata,
-    addNewDocument,
-    removeDocument,
-    removeMetadata,
-    selectLoadingDocs,
-    selectSavedDocs,
-    selectSelectedDocs,
-    updateDocCategory,
-    updateMetadata,
-} from "@/state/slices/documentSlice";
+import { RootDispatch } from "../state/store";
+import {addDocument,addNewDocument,selectLoadingDocs,selectSavedDocs,selectSelectedDocs} from "@/state/slices/documentSlice";
 import { useRef } from "react";
 import { onCancelSave, onSaveDocuments, onSelectFiles } from "@/helper/documentHelper";
 import { SavedDocPanel } from "./SavedDocPanel";
@@ -74,7 +56,7 @@ export default function DocumentsPanel() {
                     <p className="pending-hint">
                         Knowledge base is auto-detected - adjust it or add metadata before saving.
                     </p>
-                    <UnSavedDocsPanel docs={unSavedDocs}/>
+                    <UnSavedDocsPanel docs={unSavedDocs} />
                     <div className="pending-actions">
                         <Button
                             variant="primary"
