@@ -7,23 +7,27 @@ import { useDispatch } from "react-redux";
 import { DocumentState } from "@/state/model";
 
 interface RemoveBtnProps {
-    doc: DocumentState;
-    isDisabled? : boolean;
+  doc: DocumentState;
+  isDisabled?: boolean;
 }
 
-export const RemoveBtn = ({ doc, isDisabled = false }: RemoveBtnProps): JSX.Element => {
-    const dispatch: RootDispatch = useDispatch();
+export const RemoveBtn = ({
+  doc,
+  isDisabled = false,
+}: RemoveBtnProps): JSX.Element => {
+  const dispatch: RootDispatch = useDispatch();
 
-    return (<Tooltip label={`Remove ${doc.name}`}>
-        <IconButton
-            variant="tertiary"
-            tone="critical"
-            size="small"
-            aria-label={`Remove ${doc.name}`}
-            icon={<X size={13} />}
-            isDisabled={isDisabled}
-            onPress={() => dispatch(docActions.removeDocument({ id: doc.id }))}
-        />
+  return (
+    <Tooltip label={`Remove ${doc.name}`}>
+      <IconButton
+        variant="tertiary"
+        tone="critical"
+        size="small"
+        aria-label={`Remove ${doc.name}`}
+        icon={<X size={13} />}
+        isDisabled={isDisabled}
+        onPress={() => dispatch(docActions.removeDocument({ id: doc.id }))}
+      />
     </Tooltip>
-    );
+  );
 };
