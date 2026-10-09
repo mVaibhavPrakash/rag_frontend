@@ -1,13 +1,13 @@
 import { Status } from "@/components/types";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
-import { removeDocument } from "./slices/documentSlice";
 import { RootState } from "./store";
+import { docActions } from './slices/documentSlice';
 
 export const docListenerMiddleware = createListenerMiddleware();
 
 docListenerMiddleware.startListening({
   // Listen for specific actions that remove values
-  matcher: isAnyOf(removeDocument),
+  matcher: isAnyOf(docActions.removeDocument),
   
   effect: async (action, listenerApi) => {
     const previousState = listenerApi.getOriginalState() as RootState;

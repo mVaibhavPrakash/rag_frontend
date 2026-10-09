@@ -1,10 +1,12 @@
-import { ChangeEvent, createContext, useRef, useState } from "react";
-import { guessCategory } from "../components/constants";
-import { DocMetadata, DocumentState, RAGDocument, Status } from "../components/types";
-import { RootDispatch } from "@/state/store";
-import { updateDocumentStatus } from "@/state/slices/documentSlice";
 
-function isAbortError(error: unknown): boolean {
+import { Status } from "@/components/types";
+import { DocMetadata, DocumentState } from "@/state/model";
+import { ChangeEvent } from "react";
+import { guessCategory } from "../components/constants";
+import { RootDispatch } from "@/state/store";
+import { docActions } from '../state/slices/documentSlice';
+
+export function isAbortError(error: unknown): boolean {
     return error instanceof DOMException && error.name === "AbortError";
 }
 
@@ -40,7 +42,7 @@ export const onSaveDocuments = async (controller: AbortController, docState: Doc
             remainingDocs.push(s);
         }
     });
-    dispatch(updateDocumentStatus(unProcessedDocs.map(doc => ({id:doc.id, status: doc.processingStatus}))));
+    dispatch(docActions.updateDocumentStatus(unProcessedDocs.map(doc => ({id:doc.id, status: doc.processingStatus}))));
 
     if (unProcessedDocs.length === 0) return { docs: remainingDocs, errorMessage: "" };
 

@@ -4,8 +4,11 @@ import { Fragment, useEffect, useRef } from "react";
 import { Bot, CircleStopIcon, CornerDownLeftIcon, Database, RotateCcw } from "lucide-react";
 import { Button, IconButton, Tooltip, ToggleButton, ToggleButtonGroup } from "@cimpress-ui/react";
 import { CATEGORIES } from "./constants";
-import { useRagWorkspace } from "../context/root";
 import { useState } from "react";
+import { onCancel,  submitQuestion, toggleCategory } from "@/helper/chatBotHelper";
+import { useDispatch, useSelector } from "react-redux";
+import { RootDispatch, RootState } from '../state/store';
+import { preview } from "vite";
 
 const MAX_QUESTION_HEIGHT = 300;
 const AGENT_STEPS = [
@@ -19,22 +22,12 @@ function getPhaseLabel(phase: "searching" | "reviewing" | "writing" | undefined)
 }
 
 export default function ChatPanel() {
-    const {
-        selectedCategories,
-        toggleCategory,
-        question,
-        setQuestion,
-        messages,
-        isResponding,
-        responsePhase,
-        lastError,
-        onSend,
-        onCancel,
-        retryLastQuestion,
-    } = useRagWorkspace();
-
-    const [knowledgeOpen, setKnowledgeOpen] = useState(false);
+    const dispatch: RootDispatch = useDispatch();
+    const state = useSelector((state: RootState) => state.chatbot);
+    const [localState, setLocalState] = useState<{question: string; knowledgeOpen: boolean }>({question: "", knowledgeOpen: false});
+    const {responsePhase, messages, isResponding, lastError, categories} = state;
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
     const messageEndRef = useRef<HTMLDivElement | null>(null);
     const activeStepIndex = AGENT_STEPS.findIndex((step) => step.phase === responsePhase);
     const activeStepLabel = AGENT_STEPS[activeStepIndex]?.label ?? "Working on your answer";
@@ -48,7 +41,7 @@ export default function ChatPanel() {
 
     useEffect(() => {
         if (textareaRef.current) resizeTextarea(textareaRef.current);
-    }, [question]);
+    }, [localState.question]);
 
     useEffect(() => {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -89,7 +82,7 @@ export default function ChatPanel() {
                                 size="small"
                                 aria-label="Retry last question"
                                 icon={<RotateCcw size={15} />}
-                                onPress={retryLastQuestion}
+                                onPress={() => submitQuestion(messages[messages.length-2]?.content, abortControllerRef, state, dispatch)}
                             />
                         </Tooltip>
                     </div>
@@ -104,29 +97,29 @@ export default function ChatPanel() {
                         <span>GPT-4o mini</span>
                     </label>
                     <Button
-                        variant={selectedCategories.length > 0 ? "primary" : "secondary"}
+                        variant={categories.length > 0 ? "primary" : "secondary"}
                         size="small"
                         iconStart={<Database size={13} />}
-                        onPress={() => setKnowledgeOpen((v) => !v)}
+                        onPress={() => setLocalState(prev => ({...prev, knowledgeOpen: !prev.knowledgeOpen}))}
                     >
-                        {selectedCategories.length > 0
-                            ? `Knowledge base (${selectedCategories.length})`
+                        {categories.length > 0
+                            ? `Knowledge base (${categories.length})`
                             : "Knowledge base"}
                     </Button>
                 </div>
 
-                {knowledgeOpen && (
+                {localState.knowledgeOpen && (
                     <div className="tool-popover">
                         <ToggleButtonGroup
                             aria-label="Knowledge base categories"
                             selectionMode="multiple"
-                            selectedKeys={new Set(selectedCategories)}
+                            selectedKeys={new Set(categories)}
                             onSelectionChange={(keys) => {
                                 const next = new Set(keys as Set<string | number>);
                                 CATEGORIES.forEach((category) => {
-                                    const has = selectedCategories.includes(category);
+                                    const has = categories.includes(category);
                                     const should = next.has(category);
-                                    if (has !== should) toggleCategory(category);
+                                    if (has !== should) toggleCategory(category, state);
                                 });
                             }}
                             wrap
@@ -138,7 +131,7 @@ export default function ChatPanel() {
                             ))}
                         </ToggleButtonGroup>
                         <p className="composer-hint">
-                            {selectedCategories.length === 0
+                            {categories.length === 0
                                 ? "Nothing selected - RAG will decide automatically."
                                 : "RAG will still check other categories if needed."}
                         </p>
@@ -148,12 +141,13 @@ export default function ChatPanel() {
                 <div className="composer-input-row">
                     <textarea
                         ref={textareaRef}
-                        value={question}
-                        onChange={(e) => setQuestion(e.target.value)}
-                        onKeyDown={(e) => {
+                        value={localState.question}
+                        onChange={(e) => setLocalState(prev => ({...prev, question: e.target.value}))}
+                        onKeyDown={async (e) => {
                             if (e.key === "Enter" && !e.shiftKey) {
                                 e.preventDefault();
-                                onSend();
+                                await submitQuestion(localState.question, abortControllerRef, state, dispatch);
+                                setLocalState(prev => ({...prev, question: ""}));
                             }
                         }}
                         placeholder="Ask a question about your documents..."
@@ -161,15 +155,22 @@ export default function ChatPanel() {
                     />
                     <Tooltip
                         label={isResponding ? "Stop generating" : "Send question"}
-                        isDisabled={!isResponding && !question.trim()}
+                        isDisabled={!isResponding && !localState.question.trim()}
                     >
                         <IconButton
                             variant={isResponding ? "secondary" : "primary"}
                             UNSAFE_className="send-btn"
                             aria-label={isResponding ? "Stop generating" : "Send"}
                             icon={isResponding ? <CircleStopIcon size={13} /> : <CornerDownLeftIcon size={15} />}
-                            onPress={isResponding ? onCancel : onSend}
-                            isDisabled={!isResponding && !question.trim()}
+                            onPress={() => {
+                                if(isResponding) {
+                                    onCancel(abortControllerRef);
+                                } else {
+                                    submitQuestion(localState.question, abortControllerRef, state, dispatch);
+                                }
+                                setLocalState(prev => ({...prev, question: ""}));
+                            }}
+                            isDisabled={!isResponding && !localState.question.trim()}
                         />
                     </Tooltip>
                 </div>

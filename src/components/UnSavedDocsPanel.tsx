@@ -1,13 +1,14 @@
-import {updateDocCategory } from "@/state/slices/documentSlice";
+import { docActions} from "@/state/slices/documentSlice";
 import { Select, SelectItem } from "@cimpress-ui/react";
 import { FileText } from "lucide-react";
 import { JSX } from "react";
 import { CATEGORIES } from "./constants";
 import { MetaData } from "./MetaData";
-import { DocCategory, Status, DocumentState } from './types';
+import { DocCategory, Status } from './types';
 import { RootDispatch } from "@/state/store";
 import { useDispatch } from "react-redux";
 import { RemoveBtn } from "./RemoveBtn";
+import { DocumentState } from "@/state/model";
 
 interface UnSavedDocsProps {
     docs: DocumentState[];
@@ -36,7 +37,7 @@ export const UnSavedDocsPanel = ({ docs }: UnSavedDocsProps): JSX.Element => {
                                 onChange={(e) => {
                                     if (e) {
                                         dispatch(
-                                            updateDocCategory({
+                                            docActions.updateDocCategory({
                                                 id: file.id,
                                                 category: e.toString() as DocCategory,
                                             }),

@@ -1,14 +1,14 @@
 import { Paperclip } from "lucide-react";
 import { Button } from "@cimpress-ui/react";
 import { AllowedFileTypes } from "./constants";
-import { DocumentState } from "./types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootDispatch } from "../state/store";
-import {addDocument,addNewDocument,selectLoadingDocs,selectSavedDocs,selectSelectedDocs} from "@/state/slices/documentSlice";
+import {docActions,selectLoadingDocs,selectSavedDocs,selectSelectedDocs} from "@/state/slices/documentSlice";
 import { useRef } from "react";
 import { onCancelSave, onSaveDocuments, onSelectFiles } from "@/helper/documentHelper";
 import { SavedDocPanel } from "./SavedDocPanel";
 import { UnSavedDocsPanel } from "./UnSavedDocsPanel";
+import { DocumentState } from "@/state/model";
 
 export default function DocumentsPanel() {
     const allowedFileTypesString = Object.values(AllowedFileTypes).join(",");
@@ -47,7 +47,7 @@ export default function DocumentsPanel() {
                 multiple
                 onChange={(e) => {
                     const files = onSelectFiles(e, filesRef.current);
-                    dispatch(addNewDocument(files));
+                    dispatch(docActions.addNewDocument(files));
                 }}
             />
 
@@ -64,7 +64,7 @@ export default function DocumentsPanel() {
                                 abortControllerRef.current = new AbortController();
                                 const { docs, errorMessage } = await onSaveDocuments(abortControllerRef.current, totalDocs, filesRef.current, dispatch);
                                 abortControllerRef.current = null;
-                                dispatch(addDocument(docs));
+                                dispatch(docActions.addDocument(docs));
                             }}
                             isDisabled={loadingDocs.length > 0}
                         >

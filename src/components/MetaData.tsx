@@ -1,10 +1,10 @@
-import { addMetadata, removeMetadata, updateMetadata } from "@/state/slices/documentSlice";
+import { docActions } from "@/state/slices/documentSlice";
 import { Button, IconButton, TextField, Tooltip } from "@cimpress-ui/react";
 import { Plus, X } from "lucide-react";
 import { JSX, useState } from "react";
-import { DocMetadata, DocumentState } from "./types";
 import { RootDispatch } from "@/state/store";
 import { useDispatch } from "react-redux";
+import { DocMetadata, DocumentState } from "@/state/model";
 
 interface MetaDataProps {
     doc: DocumentState;
@@ -18,7 +18,7 @@ export const MetaData = ({ doc, isDisabled }: MetaDataProps): JSX.Element => {
     ]);
 
     const onBlur = (id: string, field: Partial<Pick<DocMetadata, "key" | "value">>) => {
-        dispatch(updateMetadata({id: doc.id,metadataId: id,field: field}));
+        dispatch(docActions.updateMetadata({id: doc.id,metadataId: id,field: field}));
     }
 
     const onChange = (id: string, field: Partial<Pick<DocMetadata, "key" | "value">>) => {
@@ -60,7 +60,7 @@ export const MetaData = ({ doc, isDisabled }: MetaDataProps): JSX.Element => {
                             aria-label="Remove metadata field"
                             icon={<X size={13} />}
                             onPress={() =>
-                                dispatch(removeMetadata({
+                                dispatch(docActions.removeMetadata({
                                     id: doc.id,
                                     metadataId: entry.id,
                                 }))
@@ -74,7 +74,7 @@ export const MetaData = ({ doc, isDisabled }: MetaDataProps): JSX.Element => {
                 variant="secondary"
                 size="small"
                 iconStart={<Plus size={12} />}
-                onPress={() => dispatch(addMetadata({ id: doc.id }))}
+                onPress={() => dispatch(docActions.addMetadata({ id: doc.id }))}
             >
                 Add metadata
             </Button>

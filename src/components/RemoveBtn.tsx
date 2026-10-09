@@ -1,10 +1,10 @@
 import { JSX } from "react";
-import { DocumentState } from "./types";
-import { removeDocument } from "@/state/slices/documentSlice";
+import { docActions } from "@/state/slices/documentSlice";
 import { IconButton, Tooltip } from "@cimpress-ui/react";
 import { X } from "lucide-react";
 import { RootDispatch } from "@/state/store";
 import { useDispatch } from "react-redux";
+import { DocumentState } from "@/state/model";
 
 interface RemoveBtnProps {
     doc: DocumentState;
@@ -22,7 +22,7 @@ export const RemoveBtn = ({ doc, isDisabled = false }: RemoveBtnProps): JSX.Elem
             aria-label={`Remove ${doc.name}`}
             icon={<X size={13} />}
             isDisabled={isDisabled}
-            onPress={() => dispatch(removeDocument({ id: doc.id }))}
+            onPress={() => dispatch(docActions.removeDocument({ id: doc.id }))}
         />
     </Tooltip>
     )
