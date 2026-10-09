@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { docListenerMiddleware } from "./middleware";
-import documentReducer from "./slices/documentSlice"
+import documentReducer from "./slices/documentSlice";
 import chatBotReducer from "./slices/chatBotSlice";
 
 

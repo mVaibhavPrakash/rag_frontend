@@ -1,9 +1,9 @@
 import { RootDispatch } from "@/state/store";
 import { JSX } from "react";
 import { useDispatch } from "react-redux";
-import { DocumentState } from "./types";
 import { FileText, X } from "lucide-react";
 import { RemoveBtn } from "./RemoveBtn";
+import { DocumentState } from "@/state/model";
 
 interface SavedDocPanelProps {
     docs: DocumentState[];
@@ -36,5 +36,4 @@ export const SavedDocPanel = ({ docs }: SavedDocPanelProps): JSX.Element => {
             }
         </>
     );
-
-}
+};

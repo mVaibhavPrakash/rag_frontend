@@ -19,11 +19,11 @@ export const MetaData = ({ doc, isDisabled }: MetaDataProps): JSX.Element => {
 
     const onBlur = (id: string, field: Partial<Pick<DocMetadata, "key" | "value">>) => {
         dispatch(docActions.updateMetadata({id: doc.id,metadataId: id,field: field}));
-    }
+    };
 
     const onChange = (id: string, field: Partial<Pick<DocMetadata, "key" | "value">>) => {
         setState(prev => prev.map(p => (p.id === id ? {...p, ...field} : p)));
-    }
+    };
 
     return (
         <div className="metadata-list">
@@ -79,5 +79,5 @@ export const MetaData = ({ doc, isDisabled }: MetaDataProps): JSX.Element => {
                 Add metadata
             </Button>
         </div>
-    )
-}
+    );
+};

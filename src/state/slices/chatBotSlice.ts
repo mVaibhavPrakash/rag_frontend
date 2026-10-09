@@ -15,7 +15,7 @@ const initialState: ChatBotState = {
             content: "Add a few documents, then ask a question. I will pick the most relevant knowledge automatically unless you tell me where to look.",
         },
     ]
-}
+};
 
 const chatBotSlice = createSlice({
     name: "chatbot",

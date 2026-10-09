@@ -12,7 +12,7 @@ export const addNewDocument = (state: DocumentState[], action: PayloadAction<Doc
      * No need to return the state as here we are mutating the existing state and not recreating it,
      * so Immer tracks the mutation and creates the next immutable state automatically.
     */
-    state.push(...action.payload)
+    state.push(...action.payload);
 };
 
 export const removeDocument = (state: DocumentState[], action: PayloadAction<{ id: string }>): DocumentState[] => {
@@ -28,7 +28,7 @@ export const removeDocument = (state: DocumentState[], action: PayloadAction<{ i
      * 
      * Rule: Either modify the Immer draft directly or return a new state.
      */
-    return state.filter(value => value.id !== action.payload.id)
+    return state.filter(value => value.id !== action.payload.id);
 };
 
 export const updateDocCategory = (state: DocumentState[], action: PayloadAction<{ id: string, category: DocCategory }>) => {
@@ -52,9 +52,9 @@ export const updateMetadata = (state: DocumentState[], action: PayloadAction<{ i
     if (stateSlice) {
         stateSlice.metadata?.forEach(m => {
             if (m.id === metadataId) {
-                m = { ...m, ...field }
+                m = { ...m, ...field };
             }
-        })
+        });
     }
 };
 
@@ -62,7 +62,7 @@ export const removeMetadata = (state: DocumentState[], action: PayloadAction<{ i
     const { id, metadataId } = action.payload;
     const stateSlice = state.find(s => s.id === id);
     if (stateSlice) {
-        stateSlice.metadata = stateSlice.metadata.filter(m => m.id !== metadataId)
+        stateSlice.metadata = stateSlice.metadata.filter(m => m.id !== metadataId);
     }
 };
 
@@ -76,4 +76,4 @@ export const updateDocumentStatus = (state: DocumentState[], action: PayloadActi
             return s;
         }
     });
-}
+};

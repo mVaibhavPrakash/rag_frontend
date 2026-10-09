@@ -1,6 +1,5 @@
 import { ChatMessage, DocCategory, ResponsePhase } from "@/components/types";
 import { ChatBotState } from "@/state/model";
-import { setResponsePhase } from "@/state/reducers/chatBotReducers";
 import { chatActions } from "@/state/slices/chatBotSlice";
 import { RootDispatch } from "@/state/store";
 import { Action } from "@reduxjs/toolkit";
@@ -11,11 +10,11 @@ export const submitQuestion = async (rawQuestion: string, abortController: React
     const actions: Action[] = [];
 
     const trimmed = rawQuestion.trim();
-    if (!trimmed || state.isResponding) { return };
+    if (!trimmed || state.isResponding) { return; };
 
     const userMessage: ChatMessage = { id: `user-${Date.now()}`, role: "user", content: trimmed };
     if (state.messages[0]?.id === "welcome") {
-        actions.push(setMessage([...state.messages.slice(1), userMessage]))
+        actions.push(setMessage([...state.messages.slice(1), userMessage]));
     } else {
         actions.push(addMessage(userMessage));
     }

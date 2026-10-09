@@ -8,7 +8,6 @@ import { useState } from "react";
 import { onCancel,  submitQuestion, toggleCategory } from "@/helper/chatBotHelper";
 import { useDispatch, useSelector } from "react-redux";
 import { RootDispatch, RootState } from '../state/store';
-import { preview } from "vite";
 
 const MAX_QUESTION_HEIGHT = 300;
 const AGENT_STEPS = [

@@ -1,10 +1,10 @@
 import {  Status } from '@/components/types';
-import { createSelector, createSlice,  PayloadAction} from '@reduxjs/toolkit';
+import { createSelector, createSlice} from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { addDocument, addMetadata, addNewDocument, removeDocument, removeMetadata, updateDocCategory, updateDocumentStatus, updateMetadata } from '../reducers/documentReducers';
 import { DocumentState } from '../model';
 
-const initialState: DocumentState[] = []
+const initialState: DocumentState[] = [];
 
 const documentSlice = createSlice({
     name: "document",

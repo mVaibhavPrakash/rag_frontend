@@ -24,7 +24,7 @@ export const onSelectFiles = (event: ChangeEvent<HTMLInputElement>, filesMap: Ma
             category: guessCategory(file.name),
             metadata: [],
             createdAt: new Date().toLocaleTimeString()
-        }
+        };
     });
 
     event.target.value = "";

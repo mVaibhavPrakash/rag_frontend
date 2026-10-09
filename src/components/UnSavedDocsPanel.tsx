@@ -58,5 +58,5 @@ export const UnSavedDocsPanel = ({ docs }: UnSavedDocsProps): JSX.Element => {
                 );
             })}
         </>
-    )
-}
+    );
+};

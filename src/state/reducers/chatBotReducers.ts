@@ -4,7 +4,7 @@ import { ChatMessage, DocCategory, ResponsePhase } from "@/components/types";
 
 export const setCategories = (state: ChatBotState, action: PayloadAction<DocCategory[]>) => {
     state.categories = action.payload;
-}
+};
 
 export const setMessage = (state: ChatBotState, action: PayloadAction<ChatMessage[]>) => {
     state.messages = action.payload;
@@ -29,4 +29,4 @@ export const setLastError = (state: ChatBotState, action: PayloadAction<string |
 
 export const setLastFailedQuestion = (state: ChatBotState, action: PayloadAction<string>) => {
     state.lastFailedQuestion = action.payload;
-}
+};

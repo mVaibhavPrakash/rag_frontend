@@ -25,5 +25,5 @@ export const RemoveBtn = ({ doc, isDisabled = false }: RemoveBtnProps): JSX.Elem
             onPress={() => dispatch(docActions.removeDocument({ id: doc.id }))}
         />
     </Tooltip>
-    )
-}
+    );
+};
